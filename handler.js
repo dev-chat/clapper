@@ -1,7 +1,9 @@
+"use strict";
+
 const querystring = require("querystring");
 const https = require("https");
 
-exports.handler = (event, context, callback) => {
+module.exports.clapper = (event, context, callback) => {
   const { text, user_id, response_url } = querystring.parse(event.body);
 
   if (!text || text.length === 0) {
@@ -40,3 +42,6 @@ exports.handler = (event, context, callback) => {
   req.write(response);
   req.end();
 };
+
+// Use this code if you don't use the http event with the LAMBDA-PROXY integration
+// return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
