@@ -4,14 +4,26 @@ const querystring = require("querystring");
 
 module.exports.clapper = (event, context, callback) => {
   const { text, user_id, response_url } = querystring.parse(event.body);
-  let output = "";
-  const words = text.split(" ");
-  if (!text || words.length <= 1) {
+  if (!text) {
     return {
       statusCode: 200,
-      body: `You need more than one word to use clapper.`
+      body: `You need to submit text in order to use clapper`,
+      headers: { "X-Slack-No-Retry": 1 }
     };
   }
+
+  const words = text.split(" ");
+
+  if (words.length <= 1) {
+    return {
+      statusCode: 200,
+      body: `You need more than one word to use clapper.`,
+      headers: { "X-Slack-No-Retry": 1 }
+    };
+  }
+
+  let output = "";
+
   for (let i = 0; i < words.length; i++) {
     output += i !== words.length - 1 ? `${words[i]} :clap: ` : words[i];
   }
@@ -25,9 +37,12 @@ module.exports.clapper = (event, context, callback) => {
     response_type: "in_channel",
     text: `<@${user_id}>`
   });
-  axios.post(response_url, response).catch(e => console.log(e));
-  return { statusCode: 200 };
-};
 
-// Use this code if you don't use the http event with the LAMBDA-PROXY integration
-// return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
+  axios.post(response_url, response).catch(e => console.log(e));
+
+  return {
+    statusCode: 200,
+    body: { ok: true },
+    headers: { "X-Slack-No-Retry": 1 }
+  };
+};
