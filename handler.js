@@ -4,15 +4,14 @@ const querystring = require("querystring");
 
 module.exports.clapper = (event, context, callback) => {
   const { text, user_id, response_url } = querystring.parse(event.body);
-
-  if (!text || text.length <= 1) {
+  let output = "";
+  const words = text.split(" ");
+  if (!text || words.length <= 1) {
     return {
       statusCode: 200,
       body: `You need more than one word to use clapper.`
     };
   }
-  let output = "";
-  const words = text.split(" ");
   for (let i = 0; i < words.length; i++) {
     output += i !== words.length - 1 ? `${words[i]} :clap: ` : words[i];
   }
