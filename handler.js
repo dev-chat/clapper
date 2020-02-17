@@ -34,7 +34,7 @@ module.exports.clapper = (event, context, callback) => {
       console.error(`Error responding: ${e.message} at ${response_url}`)
     );
 
-  return 200;
+  return { status: 200 };
 };
 
 // Use this code if you don't use the http event with the LAMBDA-PROXY integration
