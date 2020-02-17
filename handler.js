@@ -2,7 +2,7 @@
 const axios = require("axios");
 const querystring = require("querystring");
 
-module.exports.clapper = (event, context, callback) => {
+module.exports.clapper = async event => {
   const { text, user_id, response_url } = querystring.parse(event.body);
   if (!text) {
     return {
@@ -38,11 +38,7 @@ module.exports.clapper = (event, context, callback) => {
     text: `<@${user_id}>`
   });
 
-  axios.post(response_url, response).catch(e => console.log(e));
+  await axios.post(response_url, response).catch(e => console.log(e));
 
-  return {
-    statusCode: 200,
-    body: { ok: true },
-    headers: { "X-Slack-No-Retry": 1 }
-  };
+  return { statusCode: 200 };
 };
